@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sistem Informasi Manajemen Data Siswa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--foto:url("foto.jpg");--bg:#eef2f6;--surface:#fff;--ink:#1c2733;--muted:#5d6b7a;--line:#d8e0e8;--blue:#2f6496;--blue-d:#234c75;--soft:#e4edf6;--red:#b93a32;--gold:#e0a82e}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.55}
+[hidden]{display:none!important}
+button,input,select{font:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+h1,h2{margin:0;font-weight:700}
+@keyframes naik{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ===== login ===== */
+.login{position:relative;min-height:100vh;display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:32px;padding:40px 6vw;color:#fff;background:linear-gradient(105deg,rgba(14,38,66,.92) 0%,rgba(14,38,66,.6) 55%,rgba(14,38,66,.2) 100%),var(--foto) center/cover}
+.brand{position:absolute;top:28px;left:6vw;display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.05rem}
+.brand span{width:40px;height:40px;border-radius:50%;background:var(--gold);color:#1c2733;display:grid;place-items:center;font-weight:800}
+.login-hero h1{font-size:3.2rem;line-height:1.08;max-width:13ch;font-weight:800;letter-spacing:-.02em}
+.login-hero p{max-width:40ch;font-size:1.05rem;opacity:.92;margin:16px 0 0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.chips b{font-weight:600;font-size:.85rem;padding:6px 14px;border:1px solid rgba(255,255,255,.45);border-radius:999px;background:rgba(255,255,255,.14)}
+.login-form{display:flex;justify-content:center}
+.login-form form{width:100%;max-width:370px;background:rgba(14,38,66,.58);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.3);color:#fff;padding:34px;border-radius:22px;box-shadow:0 18px 50px rgba(0,0,0,.35);animation:naik .7s ease both}
+.login-form h2{font-size:1.5rem;margin-bottom:2px}
+.login-form small{color:rgba(255,255,255,.8)}
+.login-form label{color:#fff}
+.login-form input,.login-form select{background:rgba(255,255,255,.95);border-color:transparent}
+.login-form .btn{background:var(--gold);color:#1c2733;font-weight:700}
+.login-form .btn:hover{background:#f0b93c}
+.login-form .err{color:#ffc9c4}
+
+/* ===== form & tombol ===== */
+label{display:block;font-weight:600;margin:14px 0 4px;font-size:.9rem}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.btn{background:var(--blue);color:#fff;border:0;border-radius:999px;padding:10px 20px;font-weight:600;cursor:pointer;transition:transform .15s,background .15s}
+.btn:hover{background:var(--blue-d);transform:translateY(-1px)}
+.btn.full{width:100%;margin-top:20px}
+.btn.s{padding:5px 14px;font-size:.85rem}
+.btn.o{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+.btn.o:hover{background:var(--soft)}
+.btn.d{background:var(--red)}
+.err{color:var(--red);min-height:1.4em;margin-top:10px;font-size:.9rem}
+
+/* ===== kerangka aplikasi ===== */
+#app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+aside{background:linear-gradient(180deg,#234c75,#112a45);color:#fff;padding:24px 14px;display:flex;flex-direction:column;gap:4px;border-radius:0 22px 22px 0;position:sticky;top:0;height:100vh}
+aside .logo{display:flex;align-items:center;gap:10px;padding:0 8px 20px;font-weight:700;line-height:1.25}
+aside .logo i{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#1c2733;display:grid;place-items:center;font-style:normal;font-weight:800;flex:none}
+aside button{background:none;border:0;color:#d5e3f1;text-align:left;padding:11px 14px;border-radius:12px;cursor:pointer;transition:background .15s}
+aside button:hover{background:rgba(255,255,255,.1)}
+aside button.on{background:rgba(255,255,255,.15);color:#fff;font-weight:700;box-shadow:inset 4px 0 0 var(--gold)}
+main{min-width:0;background:linear-gradient(rgba(238,242,246,.88),rgba(238,242,246,.94)),var(--foto) center/cover fixed;padding:0 28px 40px}
+header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:12px 16px;border-radius:0 0 16px 16px;border:1px solid var(--line);border-top:0;margin-bottom:24px}
+header .me{display:flex;align-items:center;gap:12px}
+header .me small{display:block;color:var(--muted);line-height:1.2}
+.ava{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-style:normal;background:var(--blue);flex:none}
+h2{font-size:1.45rem;margin-bottom:16px}
+.bar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.bar input{max-width:300px}.bar select{max-width:220px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 12px rgba(20,40,60,.07);padding:4px 0;margin-bottom:16px}
+.pad{padding:18px 20px}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:700;color:var(--muted);font-size:.88rem}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#f5f9fd}
+td input{width:76px;padding:6px 8px}
+.act{display:flex;gap:6px}
+.nama{display:flex;align-items:center;gap:10px}
+.pill{display:inline-block;padding:2px 12px;border-radius:999px;background:var(--soft);color:var(--blue-d);font-size:.82rem;font-weight:600}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:8px 12px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:600}
+.stat{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.stat div{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:16px;padding:12px 18px;box-shadow:0 2px 12px rgba(20,40,60,.07)}
+.stat b{font-size:1.5rem;display:block}
+.modal{position:fixed;inset:0;background:rgba(20,30,40,.5);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal>div{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:440px;max-height:92vh;overflow:auto}
+.modal h2{font-size:1.2rem}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.end{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;z-index:30}
+
+/* ===== BERANDA: foto sekolah sebagai latar ===== */
+main.home{padding:0;background:linear-gradient(180deg,rgba(10,28,50,.55) 0%,rgba(10,28,50,.35) 40%,rgba(10,28,50,.85) 100%),var(--foto) center/cover fixed;color:#fff}
+main.home header{background:rgba(10,28,50,.45);border:0;border-bottom:1px solid rgba(255,255,255,.2);border-radius:0;margin-bottom:0;padding:12px 28px;color:#fff}
+main.home header .me small{color:rgba(255,255,255,.75)}
+main.home header .btn.o{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
+main.home header .btn.o:hover{background:rgba(255,255,255,.15)}
+main.home #view{padding:0 28px 40px}
+.hero{min-height:56vh;display:flex;flex-direction:column;justify-content:center;padding:48px 0 28px;max-width:760px}
+.hero .tag{align-self:flex-start;background:var(--gold);color:#1c2733;font-weight:700;font-size:.85rem;padding:4px 16px;border-radius:999px;margin-bottom:18px;animation:naik .7s ease both}
+.hero h2{font-size:clamp(2.2rem,5.2vw,3.8rem);font-weight:800;line-height:1.05;letter-spacing:-.025em;margin:0 0 14px;text-shadow:0 3px 24px rgba(0,0,0,.45);animation:naik .7s .1s ease both}
+.hero p{margin:0;max-width:48ch;font-size:1.08rem;opacity:.95;text-shadow:0 2px 12px rgba(0,0,0,.4);animation:naik .7s .2s ease both}
+.hero .tgl{margin-top:14px;font-size:.9rem;opacity:.8}
+.glass{background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.3);box-shadow:0 8px 30px rgba(0,0,0,.2)}
+main.home .stat div{background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.3);border-left:5px solid var(--gold);color:#fff;min-width:150px}
+main.home .stat b{font-size:2rem;font-weight:800}
+.quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.quick button{display:flex;flex-direction:column;gap:2px;text-align:left;cursor:pointer;color:#fff;border-radius:18px;padding:20px;border-bottom:4px solid var(--gold);transition:transform .15s,background .15s}
+.quick button:hover{transform:translateY(-4px);background:rgba(255,255,255,.26)}
+.quick .ic{font-size:1.7rem;margin-bottom:6px}
+.quick b{font-size:1.1rem}
+.quick span.d{font-size:.9rem;opacity:.85}
+.foot{margin-top:28px;text-align:center;font-size:.85rem;opacity:.75}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:760px){
+.login{grid-template-columns:1fr;padding:88px 18px 28px;gap:22px}.login-hero h1{font-size:2.1rem}.brand{left:18px;top:22px}
+#app{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;padding:12px;border-radius:0 0 22px 22px}aside .logo{width:100%;padding:0 6px 8px}
+main{padding:0 14px 30px}main.home{padding:0}main.home header{padding:12px 14px}main.home #view{padding:0 14px 30px}.row2{grid-template-columns:1fr}.hero{min-height:44vh}}
+@media print{aside,header,.bar,.btn{display:none!important}#app{display:block}body{background:#fff}main,main.home{padding:0;background:#fff;color:#000}.card{border:0}}
+</style>
+</head>
+<body>
+
+<section class="login" id="login">
+  <div class="brand"><span>1</span>SMA Negeri 1 Bulik</div>
+  <div class="login-hero">
+    <h1>Data siswa lebih rapi, kerja lebih cepat</h1>
+    <p>Sistem informasi manajemen data siswa SMA Negeri 1 Bulik. Data siswa, nilai, rapor, dan laporan ada di satu tempat.</p>
+    <div class="chips"><b>Data siswa</b><b>Nilai</b><b>Rapor</b><b>Laporan</b></div>
+  </div>
+  <div class="login-form">
+    <form onsubmit="masuk();return false">
+      <h2>Masuk ke sistem</h2>
+      <small>Isi akun lalu pilih peran Anda.</small>
+      <label for="u">Username</label><input id="u" autocomplete="username">
+      <label for="p">Password</label><input id="p" type="password" autocomplete="current-password">
+      <label for="r">Masuk sebagai</label>
+      <select id="r">
+        <option value="admin_tu">Admin TU</option>
+        <option value="guru">Guru</option>
+        <option value="siswa">Siswa / wali</option>
+        <option value="kepsek">Kepala sekolah</option>
+        <option value="admin">Admin web</option>
+      </select>
+      <div class="err" id="err" role="alert"></div>
+      <button class="btn full">Masuk</button>
+    </form>
+  </div>
+</section>
+
+<div id="app" hidden>
+  <aside id="side"></aside>
+  <main id="main">
+    <header><span id="who" class="me"></span><button class="btn o s" onclick="keluar()">Keluar</button></header>
+    <section id="view"></section>
+  </main>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div role="dialog" aria-modal="true" aria-labelledby="mt">
+    <h2 id="mt">Tambah siswa</h2>
+    <div class="row2">
+      <div><label for="f_nis">NIS</label><input id="f_nis"></div>
+      <div><label for="f_nisn">NISN</label><input id="f_nisn" inputmode="numeric" maxlength="10" placeholder="10 digit"></div>
+    </div>
+    <label for="f_nama">Nama lengkap</label><input id="f_nama">
+    <div class="row2">
+      <div><label for="f_jk">Jenis kelamin</label><select id="f_jk"><option>Laki-laki</option><option>Perempuan</option></select></div>
+      <div><label for="f_tgl">Tanggal lahir</label><input id="f_tgl" type="date"></div>
+    </div>
+    <label for="f_kelas">Kelas</label><select id="f_kelas"></select>
+    <label for="f_alamat">Alamat</label><input id="f_alamat">
+    <label for="f_wali">Nama wali</label><input id="f_wali">
+    <div class="err" id="ferr" role="alert"></div>
+    <div class="end"><button class="btn o" onclick="tutup()">Batal</button><button class="btn" onclick="simpan()">Simpan data</button></div>
+  </div>
+</div>
+
+<div class="modal" id="modalN" hidden>
+  <div role="dialog" aria-modal="true" aria-labelledby="nt">
+    <h2 id="nt">Ubah nilai</h2>
+    <label for="n_siswa">Siswa</label><select id="n_siswa"></select>
+    <label for="n_mapel">Mata pelajaran</label><select id="n_mapel"></select>
+    <div class="row2">
+      <div><label for="n_t">Nilai tugas</label><input id="n_t" type="number" min="0" max="100" oninput="autoF()"></div>
+      <div><label for="n_u">Nilai UTS</label><input id="n_u" type="number" min="0" max="100" oninput="autoF()"></div>
+      <div><label for="n_a">Nilai UAS</label><input id="n_a" type="number" min="0" max="100" oninput="autoF()"></div>
+      <div><label for="n_f">Hasil akhir</label><input id="n_f" type="number" min="0" max="100" step="0.1"></div>
+    </div>
+    <small style="color:var(--muted)">Hasil akhir otomatis dihitung (tugas 30%, UTS 30%, UAS 40%). Ubah manual jika perlu.</small>
+    <div class="err" id="nerr" role="alert"></div>
+    <div class="end"><button class="btn o" onclick="tutupN()">Batal</button><button class="btn" onclick="simpanEdit()">Simpan nilai</button></div>
+  </div>
+</div>
+
+<div class="modal" id="modalA" hidden>
+  <div role="dialog" aria-modal="true" aria-labelledby="at">
+    <h2 id="at">Tambah akun</h2>
+    <label for="a_nama">Nama pengguna</label><input id="a_nama">
+    <label for="a_role">Peran</label><select id="a_role"></select>
+    <label for="a_user">Username</label><input id="a_user" autocomplete="off">
+    <label for="a_pass">Password</label><input id="a_pass" autocomplete="off">
+    <div class="err" id="aerr" role="alert"></div>
+    <div class="end"><button class="btn o" onclick="tutupA()">Batal</button><button class="btn" onclick="simpanAkun()">Simpan akun</button></div>
+  </div>
+</div>
+<div id="toast" hidden></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const roleName={admin_tu:'Admin TU',guru:'Guru',siswa:'Siswa / wali',kepsek:'Kepala sekolah',admin:'Admin web'};
+const menus={
+  admin_tu:[['beranda','Beranda'],['siswa','Data siswa'],['rapor','Cetak rapor']],
+  guru:[['beranda','Beranda'],['nilai','Kelola nilai'],['editnilai','Mengedit Nilai']],
+  siswa:[['beranda','Beranda'],['profil','Data siswa'],['nilaiku','Nilai saya']],
+  kepsek:[['beranda','Beranda'],['laporan','Laporan']],
+  admin:[['beranda','Beranda'],['akun','Akun Pengguna']]
+};
+const kelas=['X IPA 1','X IPA 2','XI IPS 1'];
+const mapel=['Matematika','Bahasa Indonesia','IPA','Bahasa Inggris','PKN','Agama','Seni Budaya','IPS','PJOK'];
+const desc={siswa:'Tambah, ubah, hapus, dan cari data siswa',rapor:'Lihat dan cetak rapor per siswa',nilai:'Input nilai tugas, UTS, dan UAS',profil:'Lihat data diri siswa',nilaiku:'Lihat nilai tiap mata pelajaran',laporan:'Rekap nilai dan export laporan',editnilai:'Ubah mapel, tugas, UTS, UAS, dan hasil akhir',akun:'Ubah username dan password semua pengguna'};
+const ikon={siswa:'👥',rapor:'📄',nilai:'✏️',profil:'🪪',nilaiku:'📊',laporan:'📈',editnilai:'🛠️',akun:'🔑'};
+let siswa=[
+  {id:1,nis:'1001',nama:'Aisyah Putri Ramadhani',jk:'Perempuan',tgl:'2009-03-14',kelas:'X IPA 1',alamat:'Jl. Tjilik Riwut 21',wali:'Ibu Ratna Dewi'},
+  {id:2,nis:'1002',nama:'Muhammad Rafi Alfarizi',jk:'Laki-laki',tgl:'2009-07-02',kelas:'X IPA 1',alamat:'Jl. Sudirman 8',wali:'Bapak Hendra Saputra'},
+  {id:3,nis:'1003',nama:'Nayla Azzahra',jk:'Perempuan',tgl:'2008-11-26',kelas:'X IPA 2',alamat:'Jl. Melati 5',wali:'Ibu Siti Marlina'},
+  {id:4,nis:'1004',nama:'Keanu Pratama Wijaya',jk:'Laki-laki',tgl:'2008-09-09',kelas:'X IPA 2',alamat:'Jl. Kenanga 12',wali:'Bapak Agus Wijaya'},
+  {id:5,nis:'1005',nama:'Zahira Kirana Putri',jk:'Perempuan',tgl:'2008-01-30',kelas:'XI IPS 1',alamat:'Jl. Merdeka 3',wali:'Ibu Wulandari'},
+  {id:6,nis:'1006',nama:'Arkan Dwi Prasetya',jk:'Laki-laki',tgl:'2007-12-18',kelas:'XI IPS 1',alamat:'Jl. Anggrek 17',wali:'Bapak Dwi Prasetyo'},
+  {id:7,nis:'1007',nama:'Alvaro Zidane Mahendra',jk:'Laki-laki',tgl:'2009-05-21',kelas:'X IPA 1',alamat:'Jl. Cempaka 9',wali:'Bapak Rizky Mahendra'},
+  {id:8,nis:'1008',nama:'Callista Naura Salsabila',jk:'Perempuan',tgl:'2007-10-05',kelas:'XI IPS 1',alamat:'Jl. Flamboyan 4',wali:'Ibu Dewi Salsabila'},
+  {id:9,nis:'1009',nama:'Dimas Aditya Nugroho',jk:'Laki-laki',tgl:'2009-02-11',kelas:'X IPA 1',alamat:'Jl. Tjilik Riwut 45',wali:'Bapak Slamet Nugroho'},
+  {id:10,nis:'1010',nama:'Putri Maharani Sari',jk:'Perempuan',tgl:'2009-06-23',kelas:'X IPA 1',alamat:'Jl. Sudirman 14',wali:'Ibu Sari Wahyuni'},
+  {id:11,nis:'1011',nama:'Fahri Ananda Kusuma',jk:'Laki-laki',tgl:'2009-04-07',kelas:'X IPA 1',alamat:'Jl. Melati 22',wali:'Bapak Anwar Kusuma'},
+  {id:12,nis:'1012',nama:'Salsabila Nur Aini',jk:'Perempuan',tgl:'2009-08-19',kelas:'X IPA 1',alamat:'Jl. Kenanga 6',wali:'Ibu Nur Halimah'},
+  {id:13,nis:'1013',nama:'Reza Bagas Saputra',jk:'Laki-laki',tgl:'2009-10-30',kelas:'X IPA 1',alamat:'Jl. Merdeka 19',wali:'Bapak Joko Saputra'},
+  {id:14,nis:'1014',nama:'Tiara Anggraini',jk:'Perempuan',tgl:'2008-12-02',kelas:'X IPA 2',alamat:'Jl. Anggrek 8',wali:'Ibu Endang Lestari'},
+  {id:15,nis:'1015',nama:'Bayu Setiawan',jk:'Laki-laki',tgl:'2008-05-16',kelas:'X IPA 2',alamat:'Jl. Cempaka 31',wali:'Bapak Teguh Setiawan'},
+  {id:16,nis:'1016',nama:'Nabila Khairunnisa',jk:'Perempuan',tgl:'2008-08-28',kelas:'X IPA 2',alamat:'Jl. Flamboyan 12',wali:'Ibu Khadijah'},
+  {id:17,nis:'1017',nama:'Gilang Ramadhan',jk:'Laki-laki',tgl:'2009-01-09',kelas:'X IPA 2',alamat:'Jl. Tjilik Riwut 63',wali:'Bapak Ramli'},
+  {id:18,nis:'1018',nama:'Octavia Rahmawati',jk:'Perempuan',tgl:'2008-10-14',kelas:'X IPA 2',alamat:'Jl. Sudirman 27',wali:'Ibu Rahmawati'},
+  {id:19,nis:'1019',nama:'Yoga Pramudya',jk:'Laki-laki',tgl:'2008-03-25',kelas:'X IPA 2',alamat:'Jl. Melati 17',wali:'Bapak Pramono'},
+  {id:20,nis:'1020',nama:'Citra Lestari Dewi',jk:'Perempuan',tgl:'2007-11-08',kelas:'XI IPS 1',alamat:'Jl. Kenanga 33',wali:'Ibu Lestari Dewi'},
+  {id:21,nis:'1021',nama:'Eko Prasetyo Utomo',jk:'Laki-laki',tgl:'2007-09-20',kelas:'XI IPS 1',alamat:'Jl. Merdeka 11',wali:'Bapak Utomo'},
+  {id:22,nis:'1022',nama:'Rania Safitri',jk:'Perempuan',tgl:'2008-02-13',kelas:'XI IPS 1',alamat:'Jl. Anggrek 24',wali:'Ibu Safitri'},
+  {id:23,nis:'1023',nama:'Fikri Maulana Yusuf',jk:'Laki-laki',tgl:'2007-07-04',kelas:'XI IPS 1',alamat:'Jl. Cempaka 5',wali:'Bapak Yusuf Maulana'},
+  {id:24,nis:'1024',nama:'Dinda Permata Sari',jk:'Perempuan',tgl:'2007-12-27',kelas:'XI IPS 1',alamat:'Jl. Flamboyan 20',wali:'Ibu Permata'},
+  {id:25,nis:'1025',nama:'Hafizh Alfarezi',jk:'Laki-laki',tgl:'2008-04-18',kelas:'XI IPS 1',alamat:'Jl. Tjilik Riwut 8',wali:'Bapak Alfian'},
+  {id:26,nis:'1026',nama:'Intan Nuraini',jk:'Perempuan',tgl:'2007-06-01',kelas:'XI IPS 1',alamat:'Jl. Sudirman 39',wali:'Ibu Nuraini'},
+  {id:27,nis:'1027',nama:'Wahyu Hidayat',jk:'Laki-laki',tgl:'2009-09-12',kelas:'X IPA 1',alamat:'Jl. Melati 3',wali:'Bapak Hidayat'},
+  {id:28,nis:'1028',nama:'Mutiara Azzahra Putri',jk:'Perempuan',tgl:'2009-11-05',kelas:'X IPA 2',alamat:'Jl. Kenanga 15',wali:'Ibu Azzahra Fitri'}
+];
+let nilai={
+  '1|Matematika':{t:88,u:85,a:90},'1|Bahasa Indonesia':{t:92,u:90,a:94},'1|IPA':{t:86,u:84,a:88},'1|Bahasa Inggris':{t:92,u:90,a:92},'1|PKN':{t:92,u:92,a:88},'1|Agama':{t:86,u:91,a:92},'1|Seni Budaya':{t:94,u:92,a:87},'1|IPS':{t:85,u:90,a:89},'1|PJOK':{t:86,u:84,a:93},
+  '2|Matematika':{t:80,u:78,a:82},'2|Bahasa Indonesia':{t:80,u:76,a:79},'2|IPA':{t:84,u:80,a:85},'2|Bahasa Inggris':{t:81,u:81,a:81},'2|PKN':{t:81,u:72,a:81},'2|Agama':{t:71,u:78,a:73},'2|Seni Budaya':{t:71,u:70,a:75},'2|IPS':{t:74,u:79,a:72},'2|PJOK':{t:78,u:75,a:79},
+  '3|Matematika':{t:90,u:92,a:91},'3|Bahasa Indonesia':{t:87,u:85,a:89},'3|IPA':{t:84,u:78,a:87},'3|Bahasa Inggris':{t:80,u:82,a:77},'3|PKN':{t:86,u:76,a:84},'3|Agama':{t:86,u:79,a:83},'3|Seni Budaya':{t:84,u:76,a:88},'3|IPS':{t:80,u:80,a:80},'3|PJOK':{t:84,u:79,a:77},
+  '4|Matematika':{t:81,u:72,a:79},'4|Bahasa Indonesia':{t:73,u:75,a:79},'4|IPA':{t:75,u:78,a:80},'4|Bahasa Inggris':{t:73,u:71,a:83},'4|PKN':{t:72,u:74,a:76},'4|Agama':{t:72,u:78,a:79},'4|Seni Budaya':{t:83,u:77,a:79},'4|IPS':{t:73,u:80,a:83},'4|PJOK':{t:75,u:81,a:77},
+  '5|Matematika':{t:81,u:83,a:86},'5|Bahasa Indonesia':{t:89,u:88,a:90},'5|IPA':{t:80,u:85,a:82},'5|Bahasa Inggris':{t:82,u:82,a:92},'5|PKN':{t:81,u:79,a:81},'5|Agama':{t:87,u:86,a:83},'5|Seni Budaya':{t:90,u:87,a:84},'5|IPS':{t:87,u:87,a:84},'5|PJOK':{t:91,u:81,a:87},
+  '6|Matematika':{t:72,u:75,a:78},'6|Bahasa Indonesia':{t:83,u:87,a:89},'6|IPA':{t:85,u:81,a:87},'6|Bahasa Inggris':{t:91,u:85,a:83},'6|PKN':{t:85,u:83,a:89},'6|Agama':{t:91,u:91,a:92},'6|Seni Budaya':{t:83,u:81,a:85},'6|IPS':{t:85,u:88,a:87},'6|PJOK':{t:82,u:90,a:88},
+  '7|Matematika':{t:85,u:83,a:87},'7|Bahasa Indonesia':{t:85,u:79,a:81},'7|IPA':{t:81,u:79,a:84},'7|Bahasa Inggris':{t:80,u:81,a:89},'7|PKN':{t:89,u:81,a:80},'7|Agama':{t:88,u:83,a:85},'7|Seni Budaya':{t:88,u:85,a:82},'7|IPS':{t:88,u:85,a:89},'7|PJOK':{t:81,u:84,a:82},
+  '8|Matematika':{t:78,u:76,a:84},'8|Bahasa Indonesia':{t:93,u:91,a:95},'8|IPA':{t:88,u:86,a:90},'8|Bahasa Inggris':{t:77,u:84,a:78},'8|PKN':{t:76,u:84,a:85},'8|Agama':{t:82,u:76,a:85},'8|Seni Budaya':{t:80,u:80,a:84},'8|IPS':{t:75,u:79,a:75},'8|PJOK':{t:75,u:74,a:75},
+  '9|Matematika':{t:81,u:88,a:90},'9|Bahasa Indonesia':{t:84,u:81,a:85},'9|IPA':{t:87,u:84,a:83},'9|Bahasa Inggris':{t:86,u:79,a:90},'9|PKN':{t:79,u:79,a:82},'9|Agama':{t:85,u:85,a:89},'9|Seni Budaya':{t:87,u:86,a:80},'9|IPS':{t:82,u:80,a:82},'9|PJOK':{t:89,u:77,a:80},
+  '10|Matematika':{t:84,u:84,a:82},'10|Bahasa Indonesia':{t:78,u:77,a:81},'10|IPA':{t:82,u:82,a:87},'10|Bahasa Inggris':{t:87,u:79,a:80},'10|PKN':{t:83,u:79,a:86},'10|Agama':{t:83,u:87,a:90},'10|Seni Budaya':{t:89,u:85,a:88},'10|IPS':{t:80,u:86,a:79},'10|PJOK':{t:78,u:84,a:84},
+  '11|Matematika':{t:79,u:78,a:89},'11|Bahasa Indonesia':{t:89,u:79,a:87},'11|IPA':{t:80,u:89,a:84},'11|Bahasa Inggris':{t:84,u:80,a:81},'11|PKN':{t:80,u:85,a:88},'11|Agama':{t:84,u:89,a:80},'11|Seni Budaya':{t:90,u:89,a:91},'11|IPS':{t:81,u:83,a:85},'11|PJOK':{t:80,u:88,a:87},
+  '12|Matematika':{t:78,u:71,a:80},'12|Bahasa Indonesia':{t:81,u:71,a:82},'12|IPA':{t:82,u:77,a:79},'12|Bahasa Inggris':{t:81,u:71,a:82},'12|PKN':{t:73,u:72,a:74},'12|Agama':{t:82,u:72,a:77},'12|Seni Budaya':{t:78,u:82,a:78},'12|IPS':{t:78,u:82,a:84},'12|PJOK':{t:81,u:78,a:80},
+  '13|Matematika':{t:92,u:84,a:93},'13|Bahasa Indonesia':{t:92,u:83,a:89},'13|IPA':{t:93,u:84,a:92},'13|Bahasa Inggris':{t:84,u:86,a:96},'13|PKN':{t:85,u:90,a:94},'13|Agama':{t:94,u:90,a:89},'13|Seni Budaya':{t:84,u:88,a:89},'13|IPS':{t:86,u:93,a:94},'13|PJOK':{t:87,u:91,a:87},
+  '14|Matematika':{t:90,u:86,a:88},'14|Bahasa Indonesia':{t:83,u:84,a:87},'14|IPA':{t:90,u:83,a:84},'14|Bahasa Inggris':{t:90,u:85,a:84},'14|PKN':{t:83,u:85,a:84},'14|Agama':{t:89,u:84,a:84},'14|Seni Budaya':{t:82,u:81,a:88},'14|IPS':{t:85,u:79,a:92},'14|PJOK':{t:81,u:83,a:83},
+  '15|Matematika':{t:80,u:79,a:78},'15|Bahasa Indonesia':{t:76,u:78,a:80},'15|IPA':{t:83,u:80,a:81},'15|Bahasa Inggris':{t:83,u:77,a:85},'15|PKN':{t:82,u:79,a:79},'15|Agama':{t:74,u:72,a:78},'15|Seni Budaya':{t:82,u:72,a:84},'15|IPS':{t:84,u:76,a:83},'15|PJOK':{t:78,u:76,a:84},
+  '16|Matematika':{t:80,u:71,a:77},'16|Bahasa Indonesia':{t:77,u:72,a:71},'16|IPA':{t:74,u:72,a:73},'16|Bahasa Inggris':{t:70,u:79,a:72},'16|PKN':{t:77,u:70,a:81},'16|Agama':{t:78,u:79,a:81},'16|Seni Budaya':{t:75,u:70,a:81},'16|IPS':{t:73,u:72,a:78},'16|PJOK':{t:74,u:71,a:82},
+  '17|Matematika':{t:77,u:77,a:82},'17|Bahasa Indonesia':{t:70,u:71,a:74},'17|IPA':{t:74,u:74,a:79},'17|Bahasa Inggris':{t:81,u:77,a:79},'17|PKN':{t:79,u:71,a:77},'17|Agama':{t:81,u:72,a:72},'17|Seni Budaya':{t:76,u:80,a:77},'17|IPS':{t:72,u:76,a:78},'17|PJOK':{t:73,u:79,a:71},
+  '18|Matematika':{t:90,u:90,a:93},'18|Bahasa Indonesia':{t:90,u:86,a:90},'18|IPA':{t:87,u:91,a:86},'18|Bahasa Inggris':{t:83,u:92,a:93},'18|PKN':{t:93,u:82,a:86},'18|Agama':{t:85,u:87,a:84},'18|Seni Budaya':{t:86,u:89,a:88},'18|IPS':{t:86,u:92,a:83},'18|PJOK':{t:87,u:89,a:84},
+  '19|Matematika':{t:78,u:75,a:80},'19|Bahasa Indonesia':{t:77,u:74,a:79},'19|IPA':{t:71,u:73,a:73},'19|Bahasa Inggris':{t:77,u:70,a:74},'19|PKN':{t:79,u:75,a:82},'19|Agama':{t:73,u:77,a:74},'19|Seni Budaya':{t:79,u:81,a:80},'19|IPS':{t:81,u:81,a:79},'19|PJOK':{t:78,u:79,a:83},
+  '20|Matematika':{t:75,u:78,a:81},'20|Bahasa Indonesia':{t:80,u:75,a:84},'20|IPA':{t:80,u:81,a:75},'20|Bahasa Inggris':{t:80,u:79,a:81},'20|PKN':{t:76,u:75,a:83},'20|Agama':{t:78,u:80,a:76},'20|Seni Budaya':{t:76,u:73,a:81},'20|IPS':{t:80,u:75,a:82},'20|PJOK':{t:79,u:74,a:79},
+  '21|Matematika':{t:81,u:72,a:83},'21|Bahasa Indonesia':{t:79,u:72,a:82},'21|IPA':{t:73,u:80,a:80},'21|Bahasa Inggris':{t:81,u:81,a:75},'21|PKN':{t:80,u:73,a:85},'21|Agama':{t:75,u:73,a:82},'21|Seni Budaya':{t:80,u:78,a:80},'21|IPS':{t:77,u:75,a:81},'21|PJOK':{t:80,u:74,a:79},
+  '22|Matematika':{t:90,u:90,a:89},'22|Bahasa Indonesia':{t:84,u:85,a:90},'22|IPA':{t:92,u:82,a:88},'22|Bahasa Inggris':{t:85,u:93,a:84},'22|PKN':{t:83,u:85,a:86},'22|Agama':{t:86,u:82,a:94},'22|Seni Budaya':{t:87,u:87,a:95},'22|IPS':{t:88,u:85,a:93},'22|PJOK':{t:90,u:83,a:91},
+  '23|Matematika':{t:81,u:81,a:78},'23|Bahasa Indonesia':{t:84,u:75,a:85},'23|IPA':{t:81,u:78,a:74},'23|Bahasa Inggris':{t:79,u:82,a:80},'23|PKN':{t:81,u:81,a:76},'23|Agama':{t:81,u:75,a:84},'23|Seni Budaya':{t:81,u:82,a:77},'23|IPS':{t:81,u:75,a:82},'23|PJOK':{t:82,u:81,a:76},
+  '24|Matematika':{t:88,u:86,a:83},'24|Bahasa Indonesia':{t:79,u:81,a:87},'24|IPA':{t:82,u:79,a:81},'24|Bahasa Inggris':{t:80,u:77,a:80},'24|PKN':{t:80,u:78,a:89},'24|Agama':{t:78,u:80,a:84},'24|Seni Budaya':{t:78,u:82,a:84},'24|IPS':{t:85,u:87,a:80},'24|PJOK':{t:80,u:82,a:88},
+  '25|Matematika':{t:71,u:72,a:80},'25|Bahasa Indonesia':{t:80,u:74,a:76},'25|IPA':{t:71,u:80,a:79},'25|Bahasa Inggris':{t:80,u:74,a:79},'25|PKN':{t:80,u:72,a:72},'25|Agama':{t:77,u:70,a:71},'25|Seni Budaya':{t:70,u:77,a:80},'25|IPS':{t:78,u:78,a:78},'25|PJOK':{t:72,u:72,a:73},
+  '26|Matematika':{t:76,u:74,a:76},'26|Bahasa Indonesia':{t:77,u:82,a:75},'26|IPA':{t:82,u:72,a:76},'26|Bahasa Inggris':{t:83,u:79,a:75},'26|PKN':{t:74,u:77,a:80},'26|Agama':{t:80,u:78,a:82},'26|Seni Budaya':{t:78,u:78,a:77},'26|IPS':{t:82,u:77,a:74},'26|PJOK':{t:83,u:83,a:74},
+  '27|Matematika':{t:78,u:81,a:84},'27|Bahasa Indonesia':{t:81,u:86,a:82},'27|IPA':{t:82,u:78,a:86},'27|Bahasa Inggris':{t:78,u:76,a:85},'27|PKN':{t:76,u:80,a:78},'27|Agama':{t:87,u:85,a:83},'27|Seni Budaya':{t:85,u:84,a:80},'27|IPS':{t:84,u:84,a:82},'27|PJOK':{t:80,u:79,a:78},
+  '28|Matematika':{t:81,u:76,a:81},'28|Bahasa Indonesia':{t:83,u:85,a:81},'28|IPA':{t:81,u:76,a:82},'28|Bahasa Inggris':{t:78,u:85,a:78},'28|PKN':{t:76,u:79,a:80},'28|Agama':{t:82,u:75,a:76},'28|Seni Budaya':{t:80,u:84,a:85},'28|IPS':{t:75,u:77,a:80},'28|PJOK':{t:85,u:78,a:81}
+};
+let akun=[
+  {id:1,role:'admin',nama:'Administrator Web',user:'admin',pass:'admin123'},
+  {id:2,role:'admin_tu',nama:'Admin TU',user:'tu',pass:'tu123'},
+  {id:3,role:'guru',nama:'Guru',user:'guru',pass:'guru123'},
+  {id:4,role:'kepsek',nama:'Kepala Sekolah',user:'kepsek',pass:'kepsek123'},
+  {id:5,role:'siswa',nama:'Siswa / Wali',user:'siswa',pass:'siswa123'}
+];
+let cur=null,editId=null,akunEdit=null,edKeys=[],edKey=null,lihat=new Set();
+const akhir=n=>n?(n.f!=null?+n.f:+(n.t*.3+n.u*.3+n.a*.4).toFixed(1)):0;
+const nm=id=>(siswa.find(s=>s.id==id)||{}).nama||'';
+const KEY='simsiswa_v2';
+function simpanSemua(){try{localStorage.setItem(KEY,JSON.stringify({siswa,nilai,akun}))}catch(e){}}
+function muat(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d){siswa=d.siswa||siswa;nilai=d.nilai||nilai;akun=d.akun||akun}}catch(e){}}
+muat();
+siswa.forEach(s=>{if(s.nisn===undefined)s.nisn='30900'+String(s.nis).padStart(5,'0')});
+function resetData(){if(confirm('Kembalikan semua data (siswa, nilai, akun) ke data awal?')){try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
+function tampilWho(){$('#who').innerHTML='<i class="ava">'+esc(cur.u[0].toUpperCase())+'</i><div><b>'+esc(cur.u)+'</b><small>'+roleName[cur.r]+'</small></div>'}
+
+function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2400)}
+
+function masuk(){
+  const u=$('#u').value.trim(),p=$('#p').value,r=$('#r').value;
+  if(!u||!p){$('#err').textContent='Isi username dan password terlebih dahulu.';return}
+  const a=akun.find(x=>x.role===r&&x.user===u&&x.pass===p);
+  if(!a){$('#err').textContent='Username, password, atau peran tidak cocok.';return}
+  cur={u:a.user,r,id:a.id,nama:a.nama};$('#err').textContent='';
+  $('#login').hidden=true;$('#app').hidden=false;
+  tampilWho();
+  $('#side').innerHTML='<div class="logo"><i>1</i><span>SMA Negeri 1<br>Bulik</span></div>'+menus[r].map(m=>`<button data-p="${m[0]}" onclick="go('${m[0]}')">${m[1]}</button>`).join('');
+  go(menus[r][0][0]);
+}
+function keluar(){$('#app').hidden=true;$('#login').hidden=false;$('#p').value=''}
+
+function go(p){
+  document.querySelectorAll('aside button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  $('#main').classList.toggle('home',p==='beranda');
+  $('#view').innerHTML=pages[p]();
+  window.scrollTo(0,0);
+  if(init[p])init[p]();
+}
+
+const tglIni=()=>new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+const pages={
+beranda:()=>`<div class="hero"><span class="tag">${roleName[cur.r]}</span><h2>Selamat datang, ${esc(cur.nama||cur.u)}</h2><p>SMA Negeri 1 Bulik, Kabupaten Lamandau. Kelola data siswa, nilai, rapor, dan laporan dari satu tempat.</p><div class="tgl">${tglIni()}</div></div>
+<div class="stat"><div><b>${siswa.length}</b>siswa terdaftar</div><div><b>${kelas.length}</b>kelas aktif</div><div><b>${mapel.length}</b>mata pelajaran</div></div>
+<div class="quick">${menus[cur.r].filter(m=>m[0]!=='beranda').map(m=>`<button class="glass" onclick="go('${m[0]}')"><span class="ic">${ikon[m[0]]}</span><b>${m[1]}</b><span class="d">${desc[m[0]]}</span></button>`).join('')}</div>
+<div class="foot">Dinas Pendidikan dan Kebudayaan Kabupaten Lamandau</div>`,
+
+siswa:()=>`<h2>Data siswa</h2>
+<div class="stat"><div><b id="cnt">0</b>siswa terdaftar</div></div>
+<div class="bar"><input id="q" placeholder="Cari nama, NIS, atau NISN" oninput="tabel()" aria-label="Cari siswa"><button class="btn" onclick="form()">Tambah siswa</button></div>
+<div class="card scroll"><table><thead><tr><th>NIS</th><th>NISN</th><th>Nama</th><th>Jenis kelamin</th><th>Tanggal lahir</th><th>Wali</th><th>Aksi</th></tr></thead><tbody id="tb"></tbody></table></div>`,
+
+nilai:()=>`<h2>Kelola nilai</h2>
+<div class="bar"><select id="m" onchange="nilaiTabel()" aria-label="Mata pelajaran">${mapel.map(m=>`<option>${m}</option>`).join('')}</select>
+<select id="sm" aria-label="Semester"><option>Ganjil</option><option>Genap</option></select></div>
+<div class="card scroll"><table><thead><tr><th>Siswa</th><th>Tugas</th><th>UTS</th><th>UAS</th><th>Nilai akhir</th></tr></thead><tbody id="nb"></tbody></table></div>
+<button class="btn" onclick="simpanNilai()">Simpan nilai</button>`,
+
+rapor:()=>`<h2>Cetak rapor</h2>
+<div class="bar"><select id="rs" onchange="raporTabel()" aria-label="Pilih siswa">${siswa.map(s=>`<option value="${s.id}">${esc(s.nama)}</option>`).join('')}</select>
+<select id="rsm" onchange="raporTabel()" aria-label="Semester"><option>Ganjil</option><option>Genap</option></select>
+<button class="btn" onclick="print()">Cetak rapor</button></div>
+<div class="card pad" id="rp"></div>`,
+
+laporan:()=>`<h2>Laporan</h2>
+<div class="bar"><button class="btn" onclick="print()">Export PDF</button><button class="btn o" onclick="excel()">Export Excel</button></div>
+<div class="card scroll"><table><thead><tr><th>Kelas</th><th>Jumlah siswa</th><th>Rata-rata nilai akhir</th></tr></thead><tbody id="lb"></tbody></table></div>`,
+
+editnilai:()=>`<h2>Mengedit Nilai</h2>
+<div class="bar"><input id="eq" placeholder="Cari nama siswa" oninput="editTabel()" aria-label="Cari siswa"><select id="em" onchange="editTabel()" aria-label="Mata pelajaran"><option value="">Semua mapel</option>${mapel.map(m=>`<option>${m}</option>`).join('')}</select><button class="btn" onclick="formNilai()">Tambah nilai</button></div>
+<div class="card scroll"><table><thead><tr><th>Siswa</th><th>Mata pelajaran</th><th>Tugas</th><th>UTS</th><th>UAS</th><th>Hasil akhir</th><th>Aksi</th></tr></thead><tbody id="eb"></tbody></table></div>`,
+
+akun:()=>`<h2>Akun Pengguna</h2>
+<div class="bar"><select id="aq" onchange="akunTabel()" aria-label="Filter peran"><option value="">Semua peran</option>${Object.keys(roleName).map(k=>`<option value="${k}">${roleName[k]}</option>`).join('')}</select><button class="btn" onclick="formAkun()">Tambah akun</button><button class="btn o" onclick="resetData()">Kembalikan data awal</button></div>
+<div class="card scroll"><table><thead><tr><th>Nama</th><th>Peran</th><th>Username</th><th>Password</th><th>Aksi</th></tr></thead><tbody id="ab"></tbody></table></div>`,
+
+profil:()=>{const s=siswa[0];return `<h2>Data siswa</h2><div class="card pad"><dl class="kv">
+<dt>NIS</dt><dd>${esc(s.nis)}</dd><dt>NISN</dt><dd>${esc(s.nisn||'-')}</dd><dt>Nama</dt><dd>${esc(s.nama)}</dd><dt>Jenis kelamin</dt><dd>${s.jk}</dd>
+<dt>Tanggal lahir</dt><dd>${s.tgl}</dd><dt>Kelas</dt><dd>${s.kelas}</dd><dt>Alamat</dt><dd>${esc(s.alamat)}</dd><dt>Wali</dt><dd>${esc(s.wali)}</dd></dl></div>`},
+
+nilaiku:()=>`<h2>Nilai saya</h2><div class="card scroll"><table><thead><tr><th>Mata pelajaran</th><th>Tugas</th><th>UTS</th><th>UAS</th><th>Nilai akhir</th></tr></thead><tbody>${
+mapel.map(m=>{const n=nilai['1|'+m];return `<tr><td>${m}</td><td>${n?n.t:'-'}</td><td>${n?n.u:'-'}</td><td>${n?n.a:'-'}</td><td><b>${n?akhir(n):'-'}</b></td></tr>`}).join('')}</tbody></table></div>`
+};
+const init={siswa:()=>tabel(),nilai:()=>nilaiTabel(),rapor:()=>raporTabel(),laporan:()=>laporanTabel(),editnilai:()=>editTabel(),akun:()=>akunTabel()};
+
+/* Mengedit Nilai (Guru) */
+function editTabel(){
+  const q=($('#eq').value||'').toLowerCase(),m=$('#em').value;
+  edKeys=Object.keys(nilai).filter(k=>{const[a,b]=k.split('|');return nm(a)&&(!m||b===m)&&nm(a).toLowerCase().includes(q)})
+   .sort((a,b)=>{const[x,xm]=a.split('|'),[y,ym]=b.split('|');return x-y||mapel.indexOf(xm)-mapel.indexOf(ym)});
+  $('#eb').innerHTML=edKeys.map((k,i)=>{const[a,b]=k.split('|'),n=nilai[k];
+   return `<tr><td>${esc(nm(a))}</td><td>${esc(b)}</td><td>${n.t}</td><td>${n.u}</td><td>${n.a}</td><td><b>${akhir(n)}</b>${n.f!=null?' <span class="pill">manual</span>':''}</td><td><div class="act"><button class="btn o s" onclick="formNilai(${i})">Ubah</button><button class="btn d s" onclick="hapusNilai(${i})">Hapus</button></div></td></tr>`}).join('')
+   ||'<tr><td colspan="7">Tidak ada nilai yang cocok. Coba nama siswa atau mapel lain.</td></tr>';
+}
+function formNilai(i){
+  edKey=i==null?null:edKeys[i];
+  const[sid,mp]=edKey?edKey.split('|'):[siswa.length?siswa[0].id:'',mapel[0]],n=edKey?nilai[edKey]:{t:'',u:'',a:''};
+  $('#nt').textContent=edKey?'Ubah nilai':'Tambah nilai';
+  $('#n_siswa').innerHTML=siswa.map(s=>`<option value="${s.id}">${esc(s.nama)}</option>`).join('');
+  $('#n_mapel').innerHTML=mapel.map(m=>`<option>${m}</option>`).join('');
+  $('#n_siswa').value=sid;$('#n_mapel').value=mp;$('#n_siswa').disabled=!!edKey;
+  $('#n_t').value=n.t;$('#n_u').value=n.u;$('#n_a').value=n.a;$('#n_f').value=edKey?akhir(n):'';
+  $('#nerr').textContent='';$('#modalN').hidden=false;
+}
+function tutupN(){$('#modalN').hidden=true}
+function autoF(){const g=k=>parseFloat($('#n_'+k).value),t=g('t'),u=g('u'),a=g('a');if(![t,u,a].some(isNaN))$('#n_f').value=+(t*.3+u*.3+a*.4).toFixed(1)}
+function simpanEdit(){
+  const g=k=>parseFloat($('#n_'+k).value),t=g('t'),u=g('u'),a=g('a'),f=g('f'),sid=$('#n_siswa').value,m=$('#n_mapel').value;
+  if([t,u,a].some(x=>isNaN(x)||x<0||x>100)){$('#nerr').textContent='Nilai tugas, UTS, dan UAS harus angka 0 sampai 100.';return}
+  if(!isNaN(f)&&(f<0||f>100)){$('#nerr').textContent='Hasil akhir harus angka 0 sampai 100.';return}
+  const n={t,u,a};if(!isNaN(f)&&f!==+(t*.3+u*.3+a*.4).toFixed(1))n.f=f;
+  const nk=sid+'|'+m;
+  if(nk!==edKey&&nilai[nk]&&!confirm('Nilai '+m+' untuk siswa ini sudah ada. Timpa?'))return;
+  if(edKey&&edKey!==nk)delete nilai[edKey];
+  nilai[nk]=n;tutupN();editTabel();simpanSemua();toast('Nilai disimpan');
+}
+function hapusNilai(i){const k=edKeys[i];if(k&&confirm('Hapus nilai '+k.split('|')[1]+' milik '+nm(k.split('|')[0])+'?')){delete nilai[k];editTabel();simpanSemua();toast('Nilai dihapus')}}
+
+/* Akun Pengguna (Admin web) */
+function akunTabel(){
+  const f=$('#aq').value,rows=akun.filter(a=>!f||a.role===f);
+  $('#ab').innerHTML=rows.map(a=>`<tr><td>${esc(a.nama)}</td><td><span class="pill">${roleName[a.role]}</span></td><td>${esc(a.user)}</td><td>${lihat.has(a.id)?esc(a.pass):'••••••••'} <button class="btn o s" onclick="toggleLihat(${a.id})">${lihat.has(a.id)?'Sembunyikan':'Lihat'}</button></td><td><div class="act"><button class="btn o s" onclick="formAkun(${a.id})">Ubah</button><button class="btn d s" onclick="hapusAkun(${a.id})">Hapus</button></div></td></tr>`).join('')
+   ||'<tr><td colspan="5">Belum ada akun untuk peran ini.</td></tr>';
+}
+function toggleLihat(id){lihat.has(id)?lihat.delete(id):lihat.add(id);akunTabel()}
+function formAkun(id){
+  akunEdit=id||null;
+  const a=akun.find(x=>x.id===id)||{nama:'',role:'guru',user:'',pass:''};
+  $('#at').textContent=id?'Ubah akun':'Tambah akun';
+  $('#a_role').innerHTML=Object.keys(roleName).map(k=>`<option value="${k}">${roleName[k]}</option>`).join('');
+  $('#a_nama').value=a.nama;$('#a_role').value=a.role;$('#a_user').value=a.user;$('#a_pass').value=a.pass;
+  $('#aerr').textContent='';$('#modalA').hidden=false;$('#a_nama').focus();
+}
+function tutupA(){$('#modalA').hidden=true}
+function simpanAkun(){
+  const d={nama:$('#a_nama').value.trim(),role:$('#a_role').value,user:$('#a_user').value.trim(),pass:$('#a_pass').value},e=m=>{$('#aerr').textContent=m};
+  if(!d.nama||!d.user||!d.pass)return e('Nama, username, dan password wajib diisi.');
+  if(/\s/.test(d.user))return e('Username tidak boleh memakai spasi.');
+  if(d.pass.length<4)return e('Password minimal 4 karakter.');
+  if(akun.some(x=>x.user.toLowerCase()===d.user.toLowerCase()&&x.id!==akunEdit))return e('Username sudah dipakai akun lain.');
+  if(akunEdit){
+    const a=akun.find(x=>x.id===akunEdit);
+    if(a.id===cur.id&&d.role!==cur.r)return e('Peran akun yang sedang dipakai tidak bisa diubah.');
+    if(a.role==='admin'&&d.role!=='admin'&&akun.filter(x=>x.role==='admin').length<2)return e('Harus ada minimal satu akun Admin web.');
+    Object.assign(a,d);if(a.id===cur.id){cur.u=a.user;cur.nama=a.nama;tampilWho()}
+  }else akun.push({id:Date.now(),...d});
+  tutupA();akunTabel();simpanSemua();toast('Akun disimpan');
+}
+function hapusAkun(id){
+  const a=akun.find(x=>x.id===id);if(!a)return;
+  if(id===cur.id)return toast('Akun yang sedang dipakai tidak bisa dihapus');
+  if(a.role==='admin'&&akun.filter(x=>x.role==='admin').length<2)return toast('Harus ada minimal satu akun Admin web');
+  if(confirm('Hapus akun '+a.user+'?')){akun=akun.filter(x=>x.id!==id);akunTabel();simpanSemua();toast('Akun dihapus')}
+}
+
+/* Data siswa (Admin TU): tambah, ubah, hapus, cari */
+function tabel(){
+  const q=($('#q').value||'').toLowerCase();
+  const rows=siswa.filter(s=>(s.nama+s.nis+(s.nisn||'')).toLowerCase().includes(q));
+  $('#cnt').textContent=siswa.length;
+  $('#tb').innerHTML=rows.map(s=>`<tr><td>${esc(s.nis)}</td><td>${esc(s.nisn||'-')}</td><td><div class="nama"><i class="ava" style="background:hsl(${(s.id*47)%360} 55% 42%)">${esc(s.nama[0])}</i>${esc(s.nama)}</div></td><td>${s.jk}</td><td>${s.tgl}</td><td>${esc(s.wali)}</td>
+  <td><div class="act"><button class="btn o s" onclick="form(${s.id})">Ubah</button><button class="btn d s" onclick="hapus(${s.id})">Hapus</button></div></td></tr>`).join('')
+  ||'<tr><td colspan="7">Tidak ada siswa dengan kata kunci itu. Coba nama, NIS, atau NISN lain.</td></tr>';
+}
+function form(id){
+  editId=id||null;
+  const s=siswa.find(x=>x.id===id)||{nis:'',nisn:'',nama:'',jk:'Laki-laki',tgl:'',kelas:kelas[0],alamat:'',wali:''};
+  $('#mt').textContent=id?'Ubah data siswa':'Tambah siswa';
+  $('#f_kelas').innerHTML=kelas.map(k=>`<option>${k}</option>`).join('');
+  ['nis','nisn','nama','jk','tgl','kelas','alamat','wali'].forEach(k=>$('#f_'+k).value=s[k]||'');
+  $('#ferr').textContent='';$('#modal').hidden=false;$('#f_nis').focus();
+}
+function tutup(){$('#modal').hidden=true}
+function simpan(){
+  const d={};['nis','nisn','nama','jk','tgl','kelas','alamat','wali'].forEach(k=>d[k]=$('#f_'+k).value.trim());
+  if(!d.nis||!d.nisn||!d.nama||!d.tgl){$('#ferr').textContent='NIS, NISN, nama, dan tanggal lahir wajib diisi.';return}
+  if(!/^\d{10}$/.test(d.nisn)){$('#ferr').textContent='NISN harus 10 digit angka.';return}
+  if(siswa.some(s=>s.nis===d.nis&&s.id!==editId)){$('#ferr').textContent='NIS sudah dipakai siswa lain.';return}
+  if(siswa.some(s=>s.nisn===d.nisn&&s.id!==editId)){$('#ferr').textContent='NISN sudah dipakai siswa lain.';return}
+  if(editId)Object.assign(siswa.find(s=>s.id===editId),d);else siswa.push({id:Date.now(),...d});
+  tutup();tabel();simpanSemua();toast('Data siswa disimpan');
+}
+function hapus(id){if(confirm('Hapus data '+nm(id)+'?')){siswa=siswa.filter(s=>s.id!==id);tabel();simpanSemua();toast('Data siswa dihapus')}}
+
+/* Nilai (Guru) */
+function nilaiTabel(){
+  const m=$('#m').value;
+  $('#nb').innerHTML=siswa.map(s=>{const n=nilai[s.id+'|'+m]||{t:'',u:'',a:''};
+  return `<tr><td>${esc(s.nama)}</td>${['t','u','a'].map(k=>`<td><input type="number" min="0" max="100" id="n_${s.id}_${k}" value="${n[k]}" oninput="hitung(${s.id})" aria-label="${k}"></td>`).join('')}<td><b id="ak_${s.id}">${n.t!==''?akhir(n):'-'}</b></td></tr>`}).join('');
+}
+function bacaNilai(id){const g=k=>parseFloat($(`#n_${id}_${k}`).value);return {t:g('t'),u:g('u'),a:g('a')}}
+function hitung(id){const n=bacaNilai(id);$('#ak_'+id).textContent=[n.t,n.u,n.a].some(isNaN)?'-':akhir(n)}
+function simpanNilai(){
+  const m=$('#m').value;let ok=0;
+  siswa.forEach(s=>{const n=bacaNilai(s.id);if(![n.t,n.u,n.a].some(isNaN)){const k=s.id+'|'+m,o=nilai[k];if(o&&o.f!=null&&o.t===n.t&&o.u===n.u&&o.a===n.a)n.f=o.f;nilai[k]=n;ok++}});if(ok)simpanSemua();
+  toast(ok?'Nilai '+m+' disimpan untuk '+ok+' siswa':'Isi nilai tugas, UTS, dan UAS dulu.');
+}
+
+/* Rapor (Admin TU) */
+function raporTabel(){
+  const id=$('#rs').value,s=siswa.find(x=>x.id==id);if(!s)return;
+  const rows=mapel.map(m=>[m,nilai[id+'|'+m]]).filter(r=>r[1]);
+  const avg=rows.length?(rows.reduce((a,r)=>a+akhir(r[1]),0)/rows.length).toFixed(1):'-';
+  $('#rp').innerHTML=`<h2>Rapor ${esc(s.nama)}</h2><dl class="kv"><dt>NIS</dt><dd>${esc(s.nis)}</dd><dt>NISN</dt><dd>${esc(s.nisn||'-')}</dd><dt>Kelas</dt><dd>${s.kelas}</dd><dt>Semester</dt><dd>${$('#rsm').value}</dd></dl>
+  <div class="scroll"><table><thead><tr><th>Mata pelajaran</th><th>Nilai akhir</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${akhir(r[1])}</td></tr>`).join('')||'<tr><td colspan="2">Belum ada nilai untuk siswa ini.</td></tr>'}
+  <tr><td><b>Rata-rata</b></td><td><b>${avg}</b></td></tr></tbody></table></div>`;
+}
+
+/* Laporan (Kepala sekolah) */
+function rekap(){return kelas.map(k=>{
+  const ids=siswa.filter(s=>s.kelas===k).map(s=>s.id);
+  const ns=Object.entries(nilai).filter(([key])=>ids.includes(+key.split('|')[0])).map(([,v])=>akhir(v));
+  return [k,ids.length,ns.length?(ns.reduce((a,b)=>a+b,0)/ns.length).toFixed(1):'-']})}
+function laporanTabel(){$('#lb').innerHTML=rekap().map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}
+function excel(){
+  const csv='\ufeffKelas,Jumlah siswa,Rata-rata nilai akhir\n'+rekap().map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='laporan_siswa.csv';a.click();
+  toast('Laporan diexport ke Excel');
+}
+</script>
+</body>
+</html>
